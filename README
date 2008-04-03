@@ -1,0 +1,77 @@
+= Stephelper 
+
+by Matthias Hennemeyer <mhennemeyer@gmail.com>
+
+== Introduction
+
+Stephelper is intended to be used with Rspec User Stories.
+It consists of two components:
+1. It provides the 'testing' framework StepSpecr for speccing Given/When/Then steps within Rspec examples. This lets you implement GWT-steps the BDD way.
+2. Stephelper provides a dsl-ish helper language to use inside your GWT-step implementations.
+
+== Example
+
+In your plaintext story you need the following step:
+  Given 5 articles
+Instead of 'just implement' and running the story as a test you write a spec:
+
+in PROJECT_HOME/stories/spec/article_story_spec.rb
+
+  describe "Given $number $models" do
+    it "should create 5 articles for number=5, models=articles" do
+      StepSpecr.run do
+        steps :my_step_group_name
+        step "Given 5 articles"
+        spec "Article.count.should >= 5"
+      end
+    end
+  end
+    
+Running the example will perform the following actions:
+  
+1. It will generate a plaintext story file containing the following:
+   Given 5 articles
+   Then _spec_step_
+2. It will generate a runnable story file:
+   steps_for(:_spec_steps_) do
+      # ...
+     Then("_spec_step_") do
+       Article.count.should >= 5  #<---- Here is the specification
+     end
+   end
+   with_steps_for(:article # ...
+3. It will run the story
+4. It will fail ...
+
+Now you're going to implement the step:
+  
+in PROJECT_HOME/stories/steps/article_steps.rb
+
+steps_for :article do
+  Given "$count $models" do |count, models|
+    count.to_i.times do
+      eval "#{models.singularize.camelize}.create"
+    end
+  end
+end
+
+Running the example again and it should pass.
+
+
+
+== REQUIREMENTS:
+
+* Rspec >= 1.1.3
+* rspec_on_rails
+
+
+
+== INSTALL:
+
+  $ ruby script/plugin install source
+  
+== HISTORY:
+
+See CHANGELOG in this directory.
+
+Copyright (c) 2008 Matthias Hennemeyer, released under the MIT license
