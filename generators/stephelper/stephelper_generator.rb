@@ -16,8 +16,8 @@ class StephelperGenerator < Rails::Generator::Base
       m.file      'helper.rb',             'stories/spec/step_spec_helper.rb'
       
       m.directory 'spec/steps/temp'
-      m.file      'story'
-      m.file      'story.rb'
+      m.file      'story'                  'spec/steps/temp/story'
+      m.file      'story.rb'               'spec/steps/temp/story.rb'
       
     end
   end
