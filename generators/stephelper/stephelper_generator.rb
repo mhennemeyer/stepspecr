@@ -13,7 +13,7 @@ class StephelperGenerator < Rails::Generator::Base
     record do |m|
 
       m.directory 'spec/steps'
-      m.file      'helper.rb',             'stories/spec/step_spec_helper.rb'
+      m.file      'helper.rb',             'spec/steps/step_spec_helper.rb'
       
       m.directory 'spec/steps/temp'
       m.file      'story',                 'spec/steps/temp/story'
