@@ -15,7 +15,7 @@ In your plaintext story you need the following step:
   Given 5 articles
 Instead of 'just implement' and running the story as a test you write a spec:
 
-in PROJECT_HOME/stories/spec/article_story_spec.rb
+in PROJECT_HOME/spec/steps/article_story_spec.rb
 
   describe "Given $number $models" do
     it "should create 5 articles for number=5, models=articles" do
@@ -41,7 +41,7 @@ Running the example will perform the following actions:
    end
    with_steps_for(:article # ...
 3. It will run the story
-4. It will fail ...
+4. It will FAIL ... 
 
 Now you're going to implement the step:
   
@@ -55,7 +55,7 @@ steps_for :article do
   end
 end
 
-Running the example again and it should pass.
+Running the example again and it should PASS.
 
 
 
@@ -65,10 +65,10 @@ Running the example again and it should pass.
 * rspec_on_rails
 
 
-
 == INSTALL:
 
-  $ ruby script/plugin install source
+  $ ruby script/plugin install git://github.com/mhennemeyer/stephelper-.git
+  $ ruby script/plugin stephelper
   
 == HISTORY:
 
