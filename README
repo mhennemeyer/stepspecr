@@ -17,10 +17,12 @@ Instead of 'just implement' and running the story as a test you write a spec:
 
 in PROJECT_HOME/spec/steps/article_story_spec.rb
 
-  describe "Given $number $models" do
-    it "should create 5 articles for number=5, models=articles" do
+  require File.expand_path(File.dirname(__FILE__) + "/stepspecr_helper.rb")
+  
+  describe "Given $count articles" do
+    it "should create 5 articles for count=5" do
       StepSpecr.run do
-        steps :my_step_group_name
+        steps_for :articles
         step "Given 5 articles"
         spec "Article.count.should >= 5"
       end
@@ -39,7 +41,7 @@ Running the example will perform the following actions:
        Article.count.should >= 5  #<---- Here is the specification
      end
    end
-   with_steps_for(:article # ...
+   with_steps_for(:articles # ...
 3. It will run the story
 4. It will FAIL ... 
 
@@ -47,15 +49,13 @@ Now you're going to implement the step:
   
 in PROJECT_HOME/stories/steps/article_steps.rb
 
-steps_for :article do
-  Given "$count $models" do |count, models|
-    count.to_i.times do
-      eval "#{models.singularize.camelize}.create"
-    end
+steps_for :articles do
+  Given "$count articles" do |count|
+    count.to_i.times { Article.create }
   end
 end
 
-Running the example again and it should PASS.
+Run the example again and it should PASS.
 
 
 

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) + '/stepspecr_helper'
 
 
 describe StepSpecr do
@@ -51,11 +51,11 @@ describe StepSpecr do
       before(:each) do
         ## 
         # Reload the class definition to have fresh defaults.
-        load 'lib/step_specr.rb'
+        reload_stepspecr
       end
       
-      it "path_to_temp = stories/steps/spec/temp" do
-        StepSpecr.path_to_temp.should == "stories/steps/spec/temp"
+      it "path_to_temp = steps/temp/" do
+        StepSpecr.path_to_temp.should == "steps/temp/"
       end
       
       it "step_group_names = [:step_specr_step]" do
@@ -70,8 +70,8 @@ describe StepSpecr do
         StepSpecr.step_to_be_specd.should == "Then the step to be specd"
       end
       
-      it "required_file = '../spec_helper.rb'" do
-        StepSpecr.required_file.should == '../spec_helper.rb'
+      it "required_file = '../stepspecr_helper.rb'" do
+        StepSpecr.required_file.should == '../stepspecr_helper.rb'
       end
       
     end
@@ -368,21 +368,21 @@ describe StepSpecr do
         end
       end
       
-      describe "{ steps :api }" do
+      describe "{ steps_for :api }" do
         it "should append :api to step_group_names" do
           StepSpecr.send(:step_group_names=, [:steps])
           StepSpecr.setup do
-            steps :api
+            steps_for :api
           end
           StepSpecr.step_group_names.should == [:steps, :api]
         end
       end
       
-      describe "{ steps :api, :resource }" do
+      describe "{ steps_for :api, :resource }" do
         it "should append :api and :resource to step_group_names" do
           StepSpecr.send(:step_group_names=, [:steps])
           StepSpecr.setup do
-            steps :api, :resource
+            steps_for :api, :resource
           end
           StepSpecr.step_group_names.should == [:steps, :api, :resource]
         end
@@ -411,7 +411,7 @@ describe StepSpecr do
     describe ".run" do
       
       before(:all) do
-        load 'lib/step_specr.rb'
+        reload_stepspecr
       end
       
       it "should (first) evaluate the associated block in class context" do

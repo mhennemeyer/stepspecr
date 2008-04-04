@@ -1,8 +1,8 @@
 class StepSpecr
   
   @@initial_state    = "'initial state'"
-  @@path_to_temp     = "stories/steps/spec/temp"
-  @@required_file    = "../spec_helper.rb"
+  @@path_to_temp     = "steps/temp/"
+  @@required_file    = "../stepspecr_helper.rb"
   @@show_output      = false
   @@spec_step        = "'spec step'"
   @@step_group_names = [:step_specr_step]
@@ -54,13 +54,14 @@ class StepSpecr
       steps_for_and_run_file
       output = parsed runner_output do |summary,pendings,failures|
         failures.should == ""
+        summary[:succeed].to_i.should >= 1
       end
       puts output if show_output
       output
     end
     
     def generate_story_file
-      File.open("#{path_to_temp}story","w") do |file|
+      File.open("#{path_to_temp}/story","w") do |file|
         file.puts <<-END 
           Story: This Story Provides the Context to Spec a Step
 
@@ -91,14 +92,14 @@ class StepSpecr
     def parsed(runner_output,&block)
       # The Summary Line:  1 scenarios: 0 succeeded, 1 failed, 0 pending
       re = /(\d+)\s*scenarios:\s*  (?# Number of scenarios)
-            (\d+)\D*               (?# Number of succeded sceanarios)
+            (\d+)\D*               (?# Number of succeeded sceanarios)
             (\d+)\D*               (?# Number of failing sceanarios)
             (\d+)\D*\n             (?# Number of pending sceanarios)
            /x
       sum = re.match(runner_output) || [""]
       summary = {}
       summary[:sceanarios] = sum[1]
-      summary[:succeded]   = sum[2] 
+      summary[:succeed]   = sum[2] 
       summary[:failures]   = sum[3] 
       summary[:pending]    = sum[4]
   
@@ -168,14 +169,14 @@ class StepSpecr
       @@step_to_be_specd = stbs
     end
     
-    def steps(*s)
+    def steps_for(*s)
       @@step_group_names << s
       @@step_group_names.flatten!
     end
 
     def steps_for_and_run_file
       steps_string = ":" + step_group_names.join(",:")
-      File.open("#{path_to_temp}story.rb","w") do |file|
+      File.open("#{path_to_temp}/story.rb","w") do |file|
         file.puts <<-END
           require File.dirname(__FILE__) + "/#{required_file}"
 
@@ -189,7 +190,7 @@ class StepSpecr
           end
       
           with_steps_for(#{steps_string},:_spec_steps_) do
-            run("#{path_to_temp}story", :type => RailsStory)
+            run("#{path_to_temp}/story", :type => RailsStory)
           end
         END
       end

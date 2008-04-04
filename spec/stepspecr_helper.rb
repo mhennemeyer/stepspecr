@@ -16,3 +16,7 @@ require File.expand_path(File.dirname(__FILE__) + "/temp/step_speccer_spec_step.
 class RailsStory
   
 end
+
+def reload_stepspecr
+  load File.dirname(__FILE__) + '/../lib/step_specr.rb'
+end
