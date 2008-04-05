@@ -51,32 +51,54 @@ class StepSpecr
     
     def do_run(hash={})
       generate_story_file
-      steps_for_and_run_file
+      generate_steps_for_and_run_file
       output = parsed runner_output do |summary,pendings,failures|
         unless summary[:failures] == 0
-          raise failures
+          raise StandardError.new(failures)
         end
         unless summary[:pending] == 0
-          raise "Not yet implemented or not found: #{pendings}"
+          raise StandardError.new("Not yet implemented or not found: #{pendings}")
         end
-        if summary[:sceanarios] == 0
-          raise "Did not find a Scenario to run."
+        if summary[:scenarios] == 0
+          raise StandardError.new("Did not find a Scenario to run.")
         end
       end
       puts output if show_output
       output
     end
     
+    def generate_steps_for_and_run_file
+      steps_string = ":" + step_group_names.join(",:")
+      File.open("#{path_to_temp}/story.rb","w") do |file|
+        file.puts <<-END
+          require File.dirname(__FILE__) + "/#{required_file}"
+
+          steps_for(:_spec_steps_) do
+            Given("_initial_state_") do
+              #{initial_state}
+            end
+            Then("_spec_step_") do
+              #{spec_step}
+            end
+          end
+      
+          with_steps_for(#{steps_string},:_spec_steps_) do
+            run("#{path_to_temp}/story", :type => RailsStory)
+          end
+        END
+      end
+    end
+    
     def generate_story_file
       File.open("#{path_to_temp}/story","w") do |file|
         file.puts <<-END 
-          Story: This Story Provides the Context to Spec a Step
+          Story: StepSpecr Story
 
            As a Developer
            I want to have generic steps
            So that I can use them in my Stories
 
-            Scenario: These Steps will be executed so that we can see if they work as we want
+            Scenario: StepSpecr Scenario
 
         END
 
@@ -105,10 +127,10 @@ class StepSpecr
            /x
       sum = re.match(runner_output) || [""]
       summary = {}
-      summary[:sceanarios] = sum[1]
-      summary[:succeed]   = sum[2] 
-      summary[:failures]   = sum[3] 
-      summary[:pending]    = sum[4]
+      summary[:scenarios]  = sum[1].to_i
+      summary[:succeed]    = sum[2].to_i
+      summary[:failures]   = sum[3].to_i 
+      summary[:pending]    = sum[4].to_i
   
       # Pending Steps:
       re = /Pending\s*Steps:\s*                (?# The Names of the Pending Steps are display) 
@@ -181,27 +203,6 @@ class StepSpecr
       @@step_group_names.flatten!
     end
 
-    def steps_for_and_run_file
-      steps_string = ":" + step_group_names.join(",:")
-      File.open("#{path_to_temp}/story.rb","w") do |file|
-        file.puts <<-END
-          require File.dirname(__FILE__) + "/#{required_file}"
-
-          steps_for(:_spec_steps_) do
-            Given("_initial_state_") do
-              #{initial_state}
-            end
-            Then("_spec_step_") do
-              #{spec_step}
-            end
-          end
-      
-          with_steps_for(#{steps_string},:_spec_steps_) do
-            run("#{path_to_temp}/story", :type => RailsStory)
-          end
-        END
-      end
-    end
   end
 end 
   

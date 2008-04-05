@@ -1,10 +1,10 @@
-          Story: This Story Provides the Context to Spec a Step
+          Story: StepSpecr Story
 
            As a Developer
            I want to have generic steps
            So that I can use them in my Stories
 
-            Scenario: These Steps will be executed so that we can see if they work as we want
+            Scenario: StepSpecr Scenario
 
 Given _initial_state_
 Then the step to be specd

@@ -129,14 +129,13 @@ describe StepSpecr do
     
     it "'full stack' - with real story file" do
       StepSpecr.send(:path_to_temp=, @path)
-      puts StepSpecr.send(:runner_output)
       StepSpecr.send(:runner_output).should =~ /Running/
     end
   end
   
   describe ".parsed(runner_output) {|summary,pending,failures| ... }" do
       
-      before(:each) do
+      before(:all) do
         @runner_output = <<-END
           Running 1 scenarios
   
@@ -161,7 +160,7 @@ describe StepSpecr do
           1) This Story Provides the Context to Spec a Step (These Steps will be executed so that we can see if they work as we want) FAILED
           Spec::Expectations::ExpectationNotMetError: expected true, got false
           method initial in test_with_steps.rb at line 13
-          /Users/Matthias/Projects/StepSpeccer/test_with_steps.rb:35
+          /Users/Matthias/Projects/StepSpecr/test_with_steps.rb:35
           2) failing FAILED
         END
   
@@ -169,31 +168,31 @@ describe StepSpecr do
       
       it "should find the summary and parse succeeded scenarios" do
         StepSpecr.send(:parsed, @runner_output) do |summary,pendings,failures|
-          summary[:succeeded].to_i.should == 0
+          summary[:succeed].should == 0
         end
       end
       
       it "should find the summary and parse pending scenarios" do
         StepSpecr.send(:parsed, @runner_output) do |summary,pendings,failures|
-          summary[:pending].to_i.should == 0
+          summary[:pending].should == 0
         end
       end
       
-      it "should find the summary and parse failures scenarios" do
+      it "should find the summary and parse failed scenarios" do
         StepSpecr.send(:parsed, @runner_output) do |summary,pendings,failures|
-          summary[:failures].to_i.should == 1
+          summary[:failures].should == 1
         end
       end
       
       it "should find pending steps" do
         StepSpecr.send(:parsed, @runner_output) do |summary,pendings,failures|
-          pendings.should =~ /This Story Provides the Context to Spec a Step/
+          pendings.should =~ /Pending\s*Steps:\s*1\)\s*/x
         end
       end
       
       it "should find failure message" do
         StepSpecr.send(:parsed, @runner_output) do |summary,pendings,failures|
-          failures.should =~ /1\).*\(These Steps will be executed so that we can see if they work as we want\) FAILED/
+          failures.should =~ /FAILURES:\s*1\)\s*/x
         end
       end
     end
@@ -216,7 +215,7 @@ describe StepSpecr do
         StepSpecr.send(:generate_story_file)
         
         File.open(@path + "story","r") do |f|
-          f.readlines.to_s.should =~ /Scenario: These Steps will be executed so that we can see if they work as we want\s*Given _initial_state_/
+          f.readlines.to_s.should =~ /Scenario: StepSpecr Scenario\s*Given _initial_state_/
         end
       end
       
@@ -238,10 +237,10 @@ describe StepSpecr do
        
     end
     
-    describe ".steps_for_and_run_file" do
+    describe ".generate_steps_for_and_run_file" do
       
       it "should generate a runnable file" do
-        StepSpecr.send(:steps_for_and_run_file)
+        StepSpecr.send(:generate_steps_for_and_run_file)
         
         File.open(@path + "story.rb","r") do |f|
           f.readlines.to_s.should =~ /with_steps_for\(:#{@steps.join(",:")},:_spec_steps_\).*do.*run\(.*\).*end/m
@@ -249,7 +248,7 @@ describe StepSpecr do
       end
       
       it "should define step_group_names" do
-        StepSpecr.send(:steps_for_and_run_file)
+        StepSpecr.send(:generate_steps_for_and_run_file)
         
         File.open(@path + "story.rb","r") do |f|
           f.readlines.to_s.should =~ /steps_for\(:_spec_steps_\)\s*do.*end/m
@@ -257,7 +256,7 @@ describe StepSpecr do
       end
       
       it "should set initial state" do
-        StepSpecr.send(:steps_for_and_run_file)
+        StepSpecr.send(:generate_steps_for_and_run_file)
         
         File.open(@path + "story.rb","r") do |f|
           f.readlines.to_s.should =~ /Given\("_initial_state_"\)\s*do\s*'initial\sstate'\s*end/
@@ -265,7 +264,7 @@ describe StepSpecr do
       end
       
       it "should set spec step" do
-        StepSpecr.send(:steps_for_and_run_file)
+        StepSpecr.send(:generate_steps_for_and_run_file)
         
         File.open(@path + "story.rb","r") do |f|
           f.readlines.to_s.should =~ /Then\(.*_spec_step_.*\)\s*do\s*'spec\sstep'\s*end/
@@ -273,7 +272,7 @@ describe StepSpecr do
       end
       
       it "should set the require for the spec_helper" do
-        StepSpecr.send(:steps_for_and_run_file)
+        StepSpecr.send(:generate_steps_for_and_run_file)
               
         File.open(@path + "story.rb","r") do |f|
           f.readlines.to_s.should =~ %r{require \s* File\.dirname\(__FILE__\)}x
@@ -287,7 +286,7 @@ describe StepSpecr do
             StepSpecr.send(:do_run)
             
             File.open(@path + "story","r") do |f|
-              f.readlines.to_s.should =~ /Story: This Story Provides the Context to Spec a Step/
+              f.readlines.to_s.should =~ /Story: StepSpecr Story/
             end
           end
           
@@ -331,10 +330,93 @@ describe StepSpecr do
           
           it "should run the story and expect failures (failing spec_step)" do
             StepSpecr.send(:spec_step=, "false.should be_true")
-            StepSpecr.send(:show_output=, true)
             lambda do
               StepSpecr.send(:do_run)
             end.should raise_error
+          end
+          
+          describe "failure messages" do
+            before(:all) do
+              @output = <<-END
+                Running 1 scenarios
+
+                Story: This Story Provides the Context to Spec a Step
+
+                  As a Developer
+                  I want to have generic steps
+                  So that I can use them in my Stories
+
+                  Scenario: These Steps will be executed so that we can see if they work as we want
+
+                    Given initial 
+                    When failing (FAILED)
+                    And pending (PENDING)
+
+                1 scenarios: 0 succeeded, 1 failed, 0 pending
+
+                Pending Steps:
+                1) This Story Provides the Context to Spec a Step (These Steps will be executed so that we can see if they work as we want): pending
+
+                FAILURES:
+                1) This Story Provides the Context to Spec a Step (These Steps will be executed so that we can see if they work as we want) FAILED
+                Spec::Expectations::ExpectationNotMetError: expected true, got false
+                method initial in test_with_steps.rb at line 13
+                /Users/Matthias/Projects/StepSpecr/test_with_steps.rb:35
+                2) failing FAILED
+              END
+            end
+            
+            before(:each) do
+              StepSpecr.stub!(:generate_story_file)
+              StepSpecr.stub!(:generate_steps_for_and_run_file)
+              StepSpecr.stub!(:runner_output).and_return @output
+            end
+            
+            it "should provide the storyrunner failure message on failing step" do
+              lambda do
+                StepSpecr.send(:do_run)
+              end.should raise_error(StandardError, 
+                  /FAILED\s*Spec::Expectations::ExpectationNotMetError:\s*expected\s*true,\s*got\s*false/x)
+            end
+          end
+          
+          describe "pending messages" do
+            before(:all) do
+              @output = <<-END
+                Running 1 scenarios
+
+                Story: This Story Provides the Context to Spec a Step
+
+                  As a Developer
+                  I want to have generic steps
+                  So that I can use them in my Stories
+
+                  Scenario: These Steps will be executed so that we can see if they work as we want
+
+                    Given initial 
+                    When not yet implemented (PENDING)
+                    
+
+                1 scenarios: 0 succeeded, 0 failed, 1 pending
+
+                Pending Steps:
+                1) not yet implemented: pending
+              END
+            end
+            
+            before(:each) do
+              StepSpecr.stub!(:generate_story_file)
+              StepSpecr.stub!(:generate_steps_for_and_run_file)
+              StepSpecr.stub!(:runner_output).and_return @output
+            end
+          
+            it "should provide a 'not yet impl.' message if a step is pending" do
+              lambda do
+                StepSpecr.send(:do_run)
+              end.should raise_error(StandardError, 
+                  /Not\s*yet\s*implemented\s*or\s*not\s*found:\s*Pending\s*Steps:\s*1\)\s*not\s*yet\s*implemented:\s*pending/x)
+                   
+            end
           end
         end
     
