@@ -60,8 +60,8 @@ describe StepSpecr do
         StepSpecr.path_to_temp.should == "steps/temp/"
       end
       
-      it "step_group_names = [:step_specr_step]" do
-        StepSpecr.step_group_names.should == [:step_specr_step]
+      it "step_group_names = :step_specr_step" do
+        StepSpecr.step_group_names.should == :step_specr_step
       end
       
       it "initial_state = 'initial_state'" do

@@ -36,7 +36,7 @@ class StepSpecr
   @@required_file      = "../stepspecr_helper.rb"
   @@show_runner_output = false
   @@spec_step          = "'spec step'"
-  @@step_group_names   = [:step_specr_step]
+  @@step_group_names   = :step_specr_step
   @@step_to_be_specd   = "Then the step to be specd"
   
   class << self
@@ -119,7 +119,7 @@ class StepSpecr
     end
     
     def generate_steps_for_and_run_file
-      steps_string = ":" + step_group_names.join(",:")
+      steps_string = ":" + step_group_names.to_s
       File.open("#{path_to_temp}/story.rb","w") do |file|
         file.puts <<-END
           require File.dirname(__FILE__) + "/#{required_file}"
