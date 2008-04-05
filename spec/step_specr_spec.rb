@@ -41,9 +41,9 @@ describe StepSpecr do
       StepSpecr.required_file.should == "spec_helper.rb"
     end
     
-    it "should maintain the show_output predicate" do
-      StepSpecr.send(:show_output=, true)
-      StepSpecr.show_output.should == true
+    it "should maintain the show_runner_output predicate" do
+      StepSpecr.send(:show_runner_output=, true)
+      StepSpecr.show_runner_output.should == true
     end
     
     describe "defaults" do
@@ -74,8 +74,8 @@ describe StepSpecr do
         StepSpecr.required_file.should == '../stepspecr_helper.rb'
       end
       
-      it "show_output = false" do
-        StepSpecr.show_output.should == false
+      it "show_runner_output = false" do
+        StepSpecr.show_runner_output.should == false
       end
       
     end
@@ -490,6 +490,15 @@ describe StepSpecr do
             required 'spec_helper.rb'
           end
           StepSpecr.required_file.should == 'spec_helper.rb'
+        end
+      end
+      
+      describe "{ show_output true }" do
+        it "should set show_runner_output to true" do
+          StepSpecr.setup do
+            show_output true
+          end
+          StepSpecr.show_runner_output.should == true
         end
       end
       

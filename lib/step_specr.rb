@@ -1,20 +1,56 @@
+# StepSpecr provides a 'testing' framework for speccing Given/When/Then steps 
+# within Rspec examples. This lets you implement GWT-steps the BDD way.
+#
+#
+# StepSpecr.setup {  } lets you configure the runner and will not run the story.
+# This is likely to be done in a before block.
+# StepSpecr.run {  } lets you run the story and provides the same configuration facility as 
+# StepSpecr.setup so you can configure the whole thing in before block and 
+# then making subsequent changes to the configuration in each example.
+# (It's likely that you will change the spec-step-implementation in each example.)
+# 
+# This are the configuration options: (Just call the methods in the blocks associated with 
+# the calls to .run or .setup)
+#
+# required    File.expand_path(File.dirname(__FILE__) +  '/helper_file.rb')
+# path        "/path/to/spec/steps/temp"
+# steps_for   :the_name_of_your_step_group
+# initial     "Class.should_receive(:good_news).and_return(@gratefulness)"
+# step        "When I call it a Ruby Class"
+# spec        "Class.class_method.should return_something"
+show_output true
+
 class StepSpecr
   
-  @@initial_state    = "'initial state'"
-  @@path_to_temp     = "steps/temp/"
-  @@required_file    = "../stepspecr_helper.rb"
-  @@show_output      = false
-  @@spec_step        = "'spec step'"
-  @@step_group_names = [:step_specr_step]
-  @@step_to_be_specd = "Then the step to be specd"
+  @@initial_state      = "'initial state'"
+  @@path_to_temp       = "steps/temp/"
+  @@required_file      = "../stepspecr_helper.rb"
+  @@show_runner_output = false
+  @@spec_step          = "'spec step'"
+  @@step_group_names   = [:step_specr_step]
+  @@step_to_be_specd   = "Then the step to be specd"
   
   class << self
     
+    # Runs the story with the values suplied by a preceeded call to StepSpecr.setup
+    # and/or by values set in a block that can be associated with this method 
+    # and the default values.
     def run(*args, &block)
       class_eval(&block) if block_given?
       do_run
     end
     
+    # StepSpecr.setup must be called with a block.
+    # Here is an example with all possible values.
+    #   StepSpecr.setup do
+    #     required    File.expand_path(File.dirname(__FILE__) +  '/helper_file.rb')
+    #     path        "/path/to/spec/steps/temp"
+    #     steps_for   :happy_class
+    #     initial     "Class.should_receive(:good_news).and_return(@gratefulness)"
+    #     step        "When I call it a Ruby Class"
+    #     spec        "Class.class_method.should return_something"
+    #     show_output true
+    #   end
     def setup(&block)
       class_eval(&block)
     end
@@ -31,8 +67,8 @@ class StepSpecr
       @@path_to_temp
     end
     
-    def show_output
-      @@show_output
+    def show_runner_output
+      @@show_runner_output
     end
     
     def spec_step
@@ -63,7 +99,7 @@ class StepSpecr
           raise StandardError.new("Did not find a Scenario to run.")
         end
       end
-      puts output if show_output
+      puts output if show_runner_output
       output
     end
     
@@ -174,8 +210,12 @@ class StepSpecr
       IO.popen("ruby -W0 #{path_to_temp}/story.rb").readlines.join(" \n ")
     end
     
-    def show_output=(so)
-      @@show_output = so
+    def show_output(so)
+      self.show_runner_output = so
+    end
+    
+    def show_runner_output=(sro)
+      @@show_runner_output = sro
     end
     
     def spec(s)
