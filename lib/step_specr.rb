@@ -13,11 +13,11 @@
 #      
 #          
 # * StepSpecr.setup {  } lets you configure the runner and will not run the story.
-# This is likely to be done in a before block.
+#   This is likely to be done in a before block.
 # * StepSpecr.run {  } lets you run the story and provides the same configuration facility as 
-# StepSpecr.setup so you can configure the whole thing in before block and 
-# then making subsequent changes to the configuration in each example.
-# (It's likely that you will change the spec-step-implementation in each example.)
+#   StepSpecr.setup so you can configure the whole thing in before block and 
+#   then making subsequent changes to the configuration in each example.
+#   (It's likely that you will change the spec-step-implementation in each example.)
 # 
 # These are the configuration options with their defaults: (Just call the methods in the blocks associated with 
 # the calls to .run or .setup)
