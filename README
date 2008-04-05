@@ -9,11 +9,13 @@ It consists of two components:
 1. It provides the 'testing' framework StepSpecr for speccing Given/When/Then steps within Rspec examples. This lets you implement GWT-steps the BDD way.
 2. Stephelper provides a dsl-ish helper language to use inside your GWT-step implementations.
 
-== Example
+== StepSpecr Examples
+
+=== A rather trivial one
 
 In your plaintext story you need the following step:
   Given 5 articles
-Instead of 'just implement' and running the story as a test you write a spec:
+Instead of 'just implement' and 'running the story as a test' you write a spec:
 
 in PROJECT_HOME/spec/steps/article_story_spec.rb
 
@@ -35,12 +37,12 @@ Running the example will perform the following actions:
    Given 5 articles
    Then _spec_step_
 2. It will generate a runnable story file:
-   steps_for(:_spec_steps_) do
-      # ...
-     Then("_spec_step_") do
-       Article.count.should >= 5  #<---- Here is the specification
+     steps_for(:_spec_steps_) do
+        # ...
+       Then("_spec_step_") do
+         Article.count.should >= 5  #<---- Here is the specification
+       end
      end
-   end
    with_steps_for(:articles # ...
 3. It will run the story
 4. It will FAIL ... 
@@ -49,15 +51,62 @@ Now you're going to implement the step:
   
 in PROJECT_HOME/stories/steps/article_steps.rb
 
-steps_for :articles do
-  Given "$count articles" do |count|
-    count.to_i.times { Article.create }
+  steps_for :articles do
+    Given "$count articles" do |count|
+      count.to_i.times { Article.create }
+    end
   end
-end
+  
 
 Run the example again and it should PASS.
 
+=== A more complex example
 
+You want a step that creates modelobjects that are specified in the story:
+  Given 5 articles
+  Given 1 post
+  Given 17 lists
+  ...
+
+This will be more than one example: (Just showing the description - BDD doesn't mean to write more than one example at a time)
+
+   describe "Given $count $models" do
+     before(:all) do 
+       StepSpecr.setup do
+         steps_for :resources
+       end
+     end
+     
+     it "should create the specified model" do
+       StepSpecr.run do
+         step "Given 1 specific_model"
+         initial "class SpecificModel ; end ; SpecificModel.should_receive(:create)"
+       end
+     end
+     
+     it "should create the specified number of models" do
+        StepSpecr.run do
+          step "Given 5 specific_models"
+          initial "class SpecificModel ; end ; SpecificModel.should_receive(:create).exactly(5).times"
+        end
+      end
+     
+     it "should create 17 lists for count=17, models=lists" do
+       StepSpecr.run do
+          step "Given 17 lists"
+          spec "List.count.should >= 17"
+        end
+     end
+   end
+   
+The implementation could look like this:
+
+   steps_for :resources do
+     Given "$count $models" do |count, name|
+       klass = eval "#{name.singularize.camelize}"
+       count.to_i.times { klass.create }
+     end
+   end
 
 == REQUIREMENTS:
 
@@ -70,8 +119,5 @@ Run the example again and it should PASS.
   $ ruby script/plugin install git://github.com/mhennemeyer/stephelper.git
   $ ruby script/plugin stephelper
   
-== HISTORY:
-
-See CHANGELOG in this directory.
 
 Copyright (c) 2008 Matthias Hennemeyer, released under the MIT license

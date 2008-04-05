@@ -1,25 +1,34 @@
 # StepSpecr provides a 'testing' framework for speccing Given/When/Then steps 
 # within Rspec examples. This lets you implement GWT-steps the BDD way.
 #
-#
-# StepSpecr.setup {  } lets you configure the runner and will not run the story.
+#   describe "Given $count articles" do
+#     it "should create 5 articles for count=5" do
+#       StepSpecr.run do
+#         steps_for :articles
+#         step "Given 5 articles"
+#         spec "Article.count.should >= 5"
+#       end
+#     end
+#   end          
+#      
+#          
+# * StepSpecr.setup {  } lets you configure the runner and will not run the story.
 # This is likely to be done in a before block.
-# StepSpecr.run {  } lets you run the story and provides the same configuration facility as 
+# * StepSpecr.run {  } lets you run the story and provides the same configuration facility as 
 # StepSpecr.setup so you can configure the whole thing in before block and 
 # then making subsequent changes to the configuration in each example.
 # (It's likely that you will change the spec-step-implementation in each example.)
 # 
-# This are the configuration options: (Just call the methods in the blocks associated with 
+# These are the configuration options: (Just call the methods in the blocks associated with 
 # the calls to .run or .setup)
 #
-# required    File.expand_path(File.dirname(__FILE__) +  '/helper_file.rb')
-# path        "/path/to/spec/steps/temp"
-# steps_for   :the_name_of_your_step_group
-# initial     "Class.should_receive(:good_news).and_return(@gratefulness)"
-# step        "When I call it a Ruby Class"
-# spec        "Class.class_method.should return_something"
-show_output true
-
+# * required    File.expand_path(File.dirname(__FILE__) +  '/helper_file.rb')
+# * path        "/path/to/spec/steps/temp"
+# * steps_for   :the_name_of_your_step_group
+# * initial     "Class.should_receive(:good_news).and_return(@gratefulness)"
+# * step        "When I call it a Ruby Class"
+# * spec        "Class.class_method.should return_something"
+# * show_output true
 class StepSpecr
   
   @@initial_state      = "'initial state'"
@@ -32,16 +41,22 @@ class StepSpecr
   
   class << self
     
-    # Runs the story with the values suplied by a preceeded call to StepSpecr.setup
-    # and/or by values set in a block that can be associated with this method 
-    # and the default values.
+    #:call-seq:
+    #   StepSpecr.run { spec      "Article.count.should >= 5" }
+    #
+    # Runs the story with the options suplied by a preceeded call to StepSpecr.setup
+    # and/or by options set in a block that can be associated with this method 
+    # and the default options.
     def run(*args, &block)
       class_eval(&block) if block_given?
       do_run
     end
     
+    #:call-seq:
+    #   StepSpecr.setup { steps_for :articles }
+    #
     # StepSpecr.setup must be called with a block.
-    # Here is an example with all possible values.
+    # Here is an example with all possible options.
     #   StepSpecr.setup do
     #     required    File.expand_path(File.dirname(__FILE__) +  '/helper_file.rb')
     #     path        "/path/to/spec/steps/temp"
@@ -55,31 +70,31 @@ class StepSpecr
       class_eval(&block)
     end
     
-    def initial_state
+    def initial_state #:nodoc:
       @@initial_state
     end
     
-    def required_file
+    def required_file #:nodoc:
       @@required_file
     end
     
-    def path_to_temp
+    def path_to_temp #:nodoc:
       @@path_to_temp
     end
     
-    def show_runner_output
+    def show_runner_output #:nodoc:
       @@show_runner_output
     end
     
-    def spec_step
+    def spec_step #:nodoc:
       @@spec_step
     end
     
-    def step_group_names
+    def step_group_names #:nodoc:
       @@step_group_names
     end
     
-    def step_to_be_specd
+    def step_to_be_specd #:nodoc:
       @@step_to_be_specd
     end
     
@@ -146,7 +161,7 @@ class StepSpecr
       end
     end
     
-    def initial(i)
+    def initial(i) # :doc:
       self.initial_state = i
     end
     
@@ -190,7 +205,7 @@ class StepSpecr
       runner_output
     end
     
-    def path(p)
+    def path(p) # :doc:
       self.path_to_temp = p
     end
     
@@ -198,7 +213,7 @@ class StepSpecr
       @@path_to_temp = p
     end
     
-    def required(p)
+    def required(p) # :doc:
       self.required_file = p
     end
     
@@ -210,7 +225,7 @@ class StepSpecr
       IO.popen("ruby -W0 #{path_to_temp}/story.rb").readlines.join(" \n ")
     end
     
-    def show_output(so)
+    def show_output(so) # :doc:
       self.show_runner_output = so
     end
     
@@ -218,7 +233,7 @@ class StepSpecr
       @@show_runner_output = sro
     end
     
-    def spec(s)
+    def spec(s) # :doc:
       self.spec_step = s
     end
     
@@ -226,7 +241,7 @@ class StepSpecr
       @@spec_step = ss
     end
     
-    def step(s)
+    def step(s) # :doc:
       self.step_to_be_specd = s
     end
     
@@ -238,7 +253,7 @@ class StepSpecr
       @@step_to_be_specd = stbs
     end
     
-    def steps_for(*s)
+    def steps_for(*s) # :doc:
       @@step_group_names << s
       @@step_group_names.flatten!
     end

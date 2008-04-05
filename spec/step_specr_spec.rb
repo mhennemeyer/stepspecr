@@ -12,6 +12,8 @@ describe StepSpecr do
   
   describe "state" do
     it "should maintain the path to the directory with the temporary files: story, story.rb and step_specr_spec_step.rb" do
+      StepSpecr.should_receive(:hello).exactly(5).times
+      5.times { StepSpecr.hello }
       StepSpecr.send(:path_to_temp=, "/path")
       StepSpecr.path_to_temp.should == "/path"
     end
