@@ -10,11 +10,16 @@ It provides a 'testing' framework for speccing Given/When/Then steps within Rspe
 
 == Examples
 
+By running 
+  $ script/generate stepspecr
+a example_step and a example_step_spec are generated.
+PROJECT_HOME/spec/steps/example_step_spec.rb is ready to run!
+
 === A rather trivial one
 
-In your plaintext story you need the following step:
+In a plaintext story the following step is needed:  
   Given 5 articles
-Instead of 'just implement' and 'running the story as a test' you write a spec:
+Instead of 'just implement' and 'running the story as a test': write a spec:
 
 in PROJECT_HOME/spec/steps/article_story_spec.rb
 

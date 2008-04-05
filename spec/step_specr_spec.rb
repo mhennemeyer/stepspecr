@@ -18,9 +18,9 @@ describe StepSpecr do
       StepSpecr.path_to_temp.should == "/path"
     end
     
-    it "should maintain an array of step_group names" do
-      StepSpecr.send(:step_group_names=, [:api])
-      StepSpecr.step_group_names.should == [:api]
+    it "should maintain the step_group name" do
+      StepSpecr.send(:step_group_names=, :api)
+      StepSpecr.step_group_names.should == :api
     end
     
     it "should maintain the 'Given initial_state' step" do
@@ -458,22 +458,11 @@ describe StepSpecr do
       end
       
       describe "{ steps_for :api }" do
-        it "should append :api to step_group_names" do
-          StepSpecr.send(:step_group_names=, [:steps])
+        it "should set step_group_names to :api" do
           StepSpecr.setup do
             steps_for :api
           end
-          StepSpecr.step_group_names.should == [:steps, :api]
-        end
-      end
-      
-      describe "{ steps_for :api, :resource }" do
-        it "should append :api and :resource to step_group_names" do
-          StepSpecr.send(:step_group_names=, [:steps])
-          StepSpecr.setup do
-            steps_for :api, :resource
-          end
-          StepSpecr.step_group_names.should == [:steps, :api, :resource]
+          StepSpecr.step_group_names.should ==:api
         end
       end
       

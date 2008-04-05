@@ -284,9 +284,8 @@ class StepSpecr
     # steps_for :api
     #
     # Tell StepSpecr the name of the stepgroup that holds the step you want to specify.
-    def steps_for(*s) # :doc:
-      @@step_group_names << s
-      @@step_group_names.flatten!
+    def steps_for(s) # :doc:
+      self.step_group_names = s
     end
 
   end
