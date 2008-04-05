@@ -74,6 +74,10 @@ describe StepSpecr do
         StepSpecr.required_file.should == '../stepspecr_helper.rb'
       end
       
+      it "show_output = false" do
+        StepSpecr.show_output.should == false
+      end
+      
     end
   end
 
@@ -125,6 +129,7 @@ describe StepSpecr do
     
     it "'full stack' - with real story file" do
       StepSpecr.send(:path_to_temp=, @path)
+      puts StepSpecr.send(:runner_output)
       StepSpecr.send(:runner_output).should =~ /Running/
     end
   end

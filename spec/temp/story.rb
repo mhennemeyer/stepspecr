@@ -10,5 +10,5 @@
           end
       
           with_steps_for(:step_specr_step,:_spec_steps_) do
-            run("/Users/iMac/Projekte/test_my_plugin/vendor/plugins/stephelper-/spec/temp/story", :type => RailsStory)
+            run("/Users/iMac/Projekte/stephelper/spec/temp//story", :type => RailsStory)
           end

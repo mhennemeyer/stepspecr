@@ -11,8 +11,6 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/temp/step_speccer_spec_step.rb")
 
-
-
 class RailsStory
   
 end

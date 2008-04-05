@@ -53,8 +53,15 @@ class StepSpecr
       generate_story_file
       steps_for_and_run_file
       output = parsed runner_output do |summary,pendings,failures|
-        failures.should == ""
-        summary[:succeed].to_i.should >= 1
+        unless summary[:failures] == 0
+          raise failures
+        end
+        unless summary[:pending] == 0
+          raise "Not yet implemented or not found: #{pendings}"
+        end
+        if summary[:sceanarios] == 0
+          raise "Did not find a Scenario to run."
+        end
       end
       puts output if show_output
       output
@@ -142,7 +149,7 @@ class StepSpecr
     end
 
     def runner_output
-      IO.popen("ruby -W0 #{path_to_temp}/story.rb").readlines.to_s
+      IO.popen("ruby -W0 #{path_to_temp}/story.rb").readlines.join(" \n ")
     end
     
     def show_output=(so)

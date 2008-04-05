@@ -67,7 +67,7 @@ Run the example again and it should PASS.
 
 == INSTALL:
 
-  $ ruby script/plugin install git://github.com/mhennemeyer/stephelper-.git
+  $ ruby script/plugin install git://github.com/mhennemeyer/stephelper.git
   $ ruby script/plugin stephelper
   
 == HISTORY:
