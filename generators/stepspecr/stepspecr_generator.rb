@@ -1,7 +1,7 @@
 require 'rbconfig'
 
 # This generator bootstraps a Rails/Rspec project for use with stephelper
-class StephelperGenerator < Rails::Generator::Base
+class StepSpecrGenerator < Rails::Generator::Base
   DEFAULT_SHEBANG = File.join(Config::CONFIG['bindir'],
                               Config::CONFIG['ruby_install_name'])
 

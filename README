@@ -1,15 +1,14 @@
-= Stephelper 
+= StepSpecr
 
 by Matthias Hennemeyer <mhennemeyer@gmail.com>
 
 == Introduction
 
 Stephelper is intended to be used with Rspec User Stories.
-It consists of two components:
-1. It provides the 'testing' framework StepSpecr for speccing Given/When/Then steps within Rspec examples. This lets you implement GWT-steps the BDD way.
-2. Stephelper provides a dsl-ish helper language to use inside your GWT-step implementations.
+It provides a 'testing' framework for speccing Given/When/Then steps within Rspec examples. This lets you implement GWT-steps the BDD way.
 
-== StepSpecr Examples
+
+== Examples
 
 === A rather trivial one
 
@@ -116,8 +115,8 @@ The implementation could look like this:
 
 == INSTALL:
 
-  $ ruby script/plugin install git://github.com/mhennemeyer/stephelper.git
-  $ ruby script/plugin stephelper
+  $ ruby script/plugin install git://github.com/mhennemeyer/stepspecr.git
+  $ ruby script/plugin stepspecr
   
 
 Copyright (c) 2008 Matthias Hennemeyer, released under the MIT license
