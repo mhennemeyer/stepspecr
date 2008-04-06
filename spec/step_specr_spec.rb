@@ -12,6 +12,13 @@ describe StepSpecr do
       end
       StepSpecr.before_expectation.should == block
     end
+    
+    it "should set the step group name" do
+      StepSpecr.configure do
+        steps_for :step_group_name
+      end
+      StepSpecr.step_group.should == :step_group_name
+    end
   end
   
   describe ".spec" do

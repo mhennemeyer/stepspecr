@@ -11,11 +11,17 @@ steps_for :stepspecr do
     end
   end
   
-  Then "it should fail" do 
+  When "I add step group $step_group" do |step_group|
+    StepSpecr.configure do
+      steps_for step_group.to_sym
+    end
+  end
+  
+  Then "it should fail with '$message'" do |msg|
     lambda {
       StepSpecr.spec @step do
       end
-    }.should raise_error("Not yet implemented")
+    }.should raise_error(msg)
   end
   
 end

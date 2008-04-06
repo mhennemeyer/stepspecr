@@ -4,13 +4,22 @@ Story: speccing a step
  I want to spec the steps to use in the stories	 
  So that they show a defined behavior
 
+ Scenario: Step group doesn't exist - failing spec
+
+  Given step 'Given a not implemented step'
+
+  When I add before-expectation: true
+
+  Then it should fail with 'Not yet implemented'
+
  Scenario: Step not yet implemented - failing spec
 
   Given step 'Given a not implemented step'
   
   When I add before-expectation: true
+  And I add step group :steps
  
-  Then it should fail
+  Then it should fail with 'Not yet implemented'
   
   
 

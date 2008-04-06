@@ -18,5 +18,13 @@ class StepSpecr
       
     end
     
+    def step_group
+      @@step_group_name
+    end
+      
+    def steps_for(sym)
+      @@step_group_name = sym
+    end
+    
   end
 end
