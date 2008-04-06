@@ -10,11 +10,6 @@ It provides a 'testing' framework for speccing Given/When/Then steps within Rspe
 
 == Examples
 
-By running 
-  $ script/generate stepspecr
-a example_step and a example_step_spec are generated.
-PROJECT_HOME/spec/steps/example_step_spec.rb is ready to run!
-
 === A rather trivial one
 
 In a plaintext story the following step is needed:  
@@ -27,31 +22,27 @@ in PROJECT_HOME/spec/steps/article_story_spec.rb
   
   describe "Given $count articles" do
     it "should create 5 articles for count=5" do
-      StepSpecr.run do
+      StepSpecr.spec "Given 5 articles" do
         steps_for :articles
-        step "Given 5 articles"
-        spec "Article.count.should >= 5"
+        after do 
+          Article.count.should >= 5
+        end
       end
     end
   end
     
 Running the example will perform the following actions:
   
-1. It will generate a plaintext story file containing the following:
-   Given 5 articles
-   Then _spec_step_
-2. It will generate a runnable story file:
-     steps_for(:_spec_steps_) do
-        # ...
-       Then("_spec_step_") do
-         Article.count.should >= 5  #<---- Here is the specification
-       end
-     end
-   with_steps_for(:articles # ...
-3. It will run the story
-4. It will FAIL ... 
+1. It will (try to) collect the steps supplied to steps_for :articles 
+2. Build a story:
+     ...
+     Given 5 articles
+     Then after_step
+3. Create the 'Then after_step' with 'Article.count.should >= 5'
+4. It will run the story
+5. It will FAIL ... 
 
-Now you're going to implement the step:
+Implement the step:
   
 in PROJECT_HOME/stories/steps/article_steps.rb
 
@@ -82,23 +73,28 @@ This will be more than one example: (Just showing the description - BDD doesn't 
      end
      
      it "should create the specified model" do
-       StepSpecr.run do
-         step "Given 1 specific_model"
-         initial "class SpecificModel ; end ; SpecificModel.should_receive(:create)"
+       StepSpecr.spec "Given 1 specific_model" do
+         before do 
+           class SpecificModel
+           end
+           SpecificModel.should_receive(:create)
+         end
        end
      end
      
      it "should create the specified number of models" do
-        StepSpecr.run do
-          step "Given 5 specific_models"
-          initial "class SpecificModel ; end ; SpecificModel.should_receive(:create).exactly(5).times"
+        StepSpecr.spec "Given 5 specific_models" do
+          before do
+            class SpecificModel
+            end
+            SpecificModel.should_receive(:create).exactly(5).times
+          end
         end
       end
      
      it "should create 17 lists for count=17, models=lists" do
-       StepSpecr.run do
-          step "Given 17 lists"
-          spec "List.count.should >= 17"
+       StepSpecr.spec "Given 17 lists" do
+          after { List.count.should >= 17 }
         end
      end
    end
@@ -121,7 +117,6 @@ The implementation could look like this:
 == INSTALL:
 
   $ ruby script/plugin install git://github.com/mhennemeyer/stepspecr.git
-  $ ruby script/plugin stepspecr
   
 
 Copyright (c) 2008 Matthias Hennemeyer, released under the MIT license
