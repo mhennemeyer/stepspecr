@@ -14,9 +14,10 @@ class StepspecrGenerator < Rails::Generator::Base
 
       m.directory 'spec/steps'
       m.file      'helper.rb',             'spec/steps/stepspecr_helper.rb'
+      m.file      'example_step_spec.rb',  'spec/steps/example_step_spec.rb'
       
       m.directory 'stories/steps'
-      m.file      'example_step_spec.rb', 'spec/steps/example_step_spec.rb'
+      
       
       m.directory 'spec/steps/temp'
       m.file      'story',                 'spec/steps/temp/story'

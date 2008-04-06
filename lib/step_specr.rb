@@ -32,8 +32,8 @@
 class StepSpecr
   
   @@initial_state      = "'initial state'"
-  @@path_to_temp       = "steps/temp/"
-  @@required_file      = "../stepspecr_helper.rb"
+  @@path_to_temp       = "steps/temp"
+  @@required_file      = "/../stepspecr_helper.rb"
   @@show_runner_output = false
   @@spec_step          = "'spec step'"
   @@step_group_names   = :step_specr_step
@@ -100,7 +100,7 @@ class StepSpecr
     
     private
     
-    def do_run(hash={})
+    def do_run
       generate_story_file
       generate_steps_for_and_run_file
       output = parsed runner_output do |summary,pendings,failures|
@@ -122,7 +122,7 @@ class StepSpecr
       steps_string = ":" + step_group_names.to_s
       File.open("#{path_to_temp}/story.rb","w") do |file|
         file.puts <<-END
-          require File.dirname(__FILE__) + "/#{required_file}"
+          require File.dirname(__FILE__) + "#{required_file}"
 
           steps_for(:_spec_steps_) do
             Given("_initial_state_") do

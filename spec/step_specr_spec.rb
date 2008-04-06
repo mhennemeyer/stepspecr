@@ -56,8 +56,8 @@ describe StepSpecr do
         reload_stepspecr
       end
       
-      it "path_to_temp = steps/temp/" do
-        StepSpecr.path_to_temp.should == "steps/temp/"
+      it "path_to_temp = steps/temp" do
+        StepSpecr.path_to_temp.should == "steps/temp"
       end
       
       it "step_group_names = :step_specr_step" do
@@ -72,8 +72,8 @@ describe StepSpecr do
         StepSpecr.step_to_be_specd.should == "Then the step to be specd"
       end
       
-      it "required_file = '../stepspecr_helper.rb'" do
-        StepSpecr.required_file.should == '../stepspecr_helper.rb'
+      it "required_file = '/../stepspecr_helper.rb'" do
+        StepSpecr.required_file.should == '/../stepspecr_helper.rb'
       end
       
       it "show_runner_output = false" do
@@ -277,7 +277,7 @@ describe StepSpecr do
         StepSpecr.send(:generate_steps_for_and_run_file)
               
         File.open(@path + "story.rb","r") do |f|
-          f.readlines.to_s.should =~ %r{require \s* File\.dirname\(__FILE__\)}x
+          f.readlines.to_s.should =~ /require\s*File.dirname\(__FILE__\)\s*\+\s*\"\/\.\.\/stepspecr_helper\.rb"/
         end
       end
     end
@@ -511,6 +511,28 @@ describe StepSpecr do
       it "and then run the story" do
         StepSpecr.should_receive(:do_run)
         StepSpecr.run
+      end
+      
+      describe "{ initial 'expectation'}" do
+        it "should set the initial state in the story.rb file" do
+          StepSpecr.run do
+            path     File.dirname(__FILE__) + "/temp"
+            initial  "'expectation'"
+          end
+          File.open(@path + "story.rb","r") do |f|
+            f.readlines.to_s.should =~ /'expectation'/
+          end
+        end
+        
+        it "should fail for an expectation that doesn't get satisfied" do
+          lambda {
+            StepSpecr.run do
+              path     File.dirname(__FILE__) + "/temp"
+              initial  "class SomeOne; end; SomeOne.should_receive(:something);"
+              spec     "false.should be_true"
+            end
+          }.should_not raise_error
+        end
       end
     end
   
