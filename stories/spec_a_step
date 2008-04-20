@@ -10,16 +10,34 @@ Story: speccing a step
 
   When I add before-expectation: true
 
-  Then it should fail with 'Not yet implemented'
+  Then it should fail
 
  Scenario: Step not yet implemented - failing spec
 
   Given step 'Given a not implemented step'
   
   When I add before-expectation: true
-  And I add step group :steps
+  And I add step group :spec
  
-  Then it should fail with 'Not yet implemented'
+  Then it should fail
+
+ Scenario: trivial failing step
+
+  Given step 'Given trivial failing step'
+
+	When I add before-expectation: true
+	And I add step group :spec
+
+	Then it should fail
+
+ Scenario: trivial passing step
+
+  Given step 'Given trivial passing step'
+
+	When I add before-expectation: true
+	And I add step group :spec
+
+	Then it should pass
   
   
 

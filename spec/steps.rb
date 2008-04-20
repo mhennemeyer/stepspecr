@@ -8,4 +8,10 @@ steps_for :spec do
     true.should be_true
   end
   
+  Given "nontrivial passing step" do
+    SpecificModel.create
+  end
+
+
+  
 end

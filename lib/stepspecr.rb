@@ -6,6 +6,9 @@ require 'spec/story/step'
 
 class StepSpecr
   
+  @@after_expectation = lambda { true }
+  @@before_expectation = lambda { true }
+  
   class << self
     
     def after(&block)
@@ -32,13 +35,15 @@ class StepSpecr
        class_eval(&block)
     end
     
-    def spec(step,&block)
+    def spec(stepname,&block)
       configure(&block)
-      type = step.split(/\s+/).first.to_s.downcase.to_sym
-      step = step.split(/\s+/)[1,100].join(" ")
+      type = stepname.split(/\s+/).first.to_s.downcase.to_sym
+      stepname = stepname.split(/\s+/)[1,100].join(" ")
       world = Spec::Story::World.create
+      step = stepgroup.find(type, stepname)
+      raise "Didn't find step: '#{stepname}'" if step == nil
       before_expectation.perform world
-      stepgroup.find(type, step).perform world
+      step.perform world
       after_expectation.perform world 
     end
     

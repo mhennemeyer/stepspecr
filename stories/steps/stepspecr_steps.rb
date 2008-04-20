@@ -11,17 +11,24 @@ steps_for :stepspecr do
     end
   end
   
-  When "I add step group $step_group" do |step_group|
+  When "I add step group $step_group" do |group|
     StepSpecr.configure do
-      steps_for step_group.to_sym
+      step_group group.to_sym
     end
   end
   
-  Then "it should fail with '$message'" do |msg|
+  Then "it should fail" do
     lambda {
       StepSpecr.spec @step do
       end
-    }.should raise_error(msg)
+    }.should raise_error
+  end
+  
+  Then "it should pass" do
+    lambda {
+      StepSpecr.spec @step do
+      end
+    }.should_not raise_error
   end
   
 end

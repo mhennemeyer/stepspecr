@@ -65,6 +65,32 @@ describe StepSpecr do
         end
       end.should_not raise_error
     end
+    
+    it "should pass if step is 'nontrivial passing'" do
+      lambda do
+        StepSpecr.spec "Given nontrivial passing step" do
+          step_group :spec
+          before do
+            class SpecificModel 
+            end 
+            SpecificModel.should_receive(:create)
+          end
+        end
+      end.should_not raise_error
+    end
+    
+    it "should pass if step is 'nontrivial failing'" do
+      lambda do
+        StepSpecr.spec "Given nontrivial passing step" do
+          step_group :spec
+          before do
+            class SpecificModel 
+            end 
+            SpecificModel.should_receive(:never_called)
+          end
+        end
+      end.should raise_error
+    end
 
   end
 end
