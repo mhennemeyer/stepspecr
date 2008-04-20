@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'spec/story'
+
 class StepSpecr
   
   class << self
@@ -15,7 +18,19 @@ class StepSpecr
     end
     
     def spec(step,&block)
-      
+      #configure(&block)
+      world = Spec::Story::World::create
+      world.instance_eval do
+        Given 'before' do
+          eval before_expectation
+        end
+        
+        # find the step-to-be-specd by step
+
+        #   Then 'after' do
+        #     eval after_expectation
+        #   end
+      end
     end
     
     def step_group
