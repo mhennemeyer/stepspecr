@@ -7,18 +7,41 @@ describe StepSpecr do
  
     it "should set the before-expectation" do
       block = lambda { true }
+      before_step = Spec::Story::Step.new("before",&block)
+      Spec::Story::Step.should_receive(:new).and_return before_step
       StepSpecr.configure do
         before(&block)
       end
-      StepSpecr.before_expectation.should == block
+      StepSpecr.before_expectation.should === before_step
+    end
+    
+    it "should set the after-expectation" do
+      block = lambda { true }
+      after_step = Spec::Story::Step.new("after",&block)
+      Spec::Story::Step.should_receive(:new).and_return after_step
+      StepSpecr.configure do
+        after(&block)
+      end
+      StepSpecr.after_expectation.should === after_step
     end
     
     it "should set the step group name" do
       StepSpecr.configure do
-        steps_for :step_group_name
+        step_group :step_group_name
       end
-      StepSpecr.step_group.should == :step_group_name
+      StepSpecr.step_group_name.should == :step_group_name
     end
+  end
+  
+  describe ".stepgroup"do
+    it "should find the steps in step_group" do
+      StepSpecr.configure do
+        step_group :spec
+      end
+      StepSpecr.stepgroup.find(:given, "trivial failing step").should_not be_nil
+      StepSpecr.stepgroup.find(:given, "trivial passing step").should_not be_nil
+    end
+
   end
   
   describe ".spec 'step' {} " do
