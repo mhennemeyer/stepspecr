@@ -21,8 +21,8 @@ describe StepSpecr do
     end
   end
   
-  describe ".spec" do
-    it "should run" do
+  describe ".spec 'step' {} " do
+    it "should fail if step not implemented" do
       StepSpecr.spec "Given a step" do
       end
     end
