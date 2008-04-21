@@ -17,7 +17,7 @@ Story: speccing a step
   Given step 'Given a not implemented step'
   
   When I add before-expectation: true
-  And I add step group :spec
+  And I add step group :stepspecr
  
   Then it should fail
 
@@ -26,7 +26,7 @@ Story: speccing a step
   Given step 'Given trivial failing step'
 
 	When I add before-expectation: true
-	And I add step group :spec
+	And I add step group :stepspecr
 
 	Then it should fail
 
@@ -35,7 +35,7 @@ Story: speccing a step
   Given step 'Given trivial passing step'
 
 	When I add before-expectation: true
-	And I add step group :spec
+	And I add step group :stepspecr
 
 	Then it should pass
   

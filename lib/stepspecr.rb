@@ -41,7 +41,7 @@ class StepSpecr
       stepname = stepname.split(/\s+/)[1,100].join(" ")
       world = Spec::Story::World.create
       step = stepgroup.find(type, stepname)
-      raise "Didn't find step: '#{stepname}'" if step == nil
+      raise Spec::Expectations::ExpectationNotMetError.new("Didn't find step: '#{stepname}'") if step == nil
       before_expectation.perform world
       step.perform world
       after_expectation.perform world 

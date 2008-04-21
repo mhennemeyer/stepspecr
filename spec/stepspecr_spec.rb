@@ -31,6 +31,16 @@ describe StepSpecr do
       end
       StepSpecr.step_group_name.should == :step_group_name
     end
+    
+    it "should update the step group name" do
+      StepSpecr.configure do
+        step_group :step_group_name_1
+      end
+      StepSpecr.configure do
+        step_group :step_group_name_2
+      end
+      StepSpecr.step_group_name.should == :step_group_name_2
+    end
   end
   
   describe ".stepgroup"do
@@ -49,44 +59,45 @@ describe StepSpecr do
       lambda do
         StepSpecr.spec "Given a step" do
         end
-      end.should raise_error
+      end.should fail_with("Didn't find step: 'a step'")
     end
     
     it "should fail if step is 'trivial failing'" do
       lambda do
         StepSpecr.spec "Given trivial failing step" do
         end
-      end.should raise_error
+      end.should fail
     end
 
     it "should pass if step is 'trivial passing'" do
       lambda do
         StepSpecr.spec "Given trivial passing step" do
         end
-      end.should_not raise_error
+      end.should_not fail
     end
     
     it "should pass if step is 'nontrivial passing'" do
       lambda do
+        
         StepSpecr.spec "Given nontrivial passing step" do
-          step_group :spec
           before do
             class SpecificModel 
             end 
             SpecificModel.should_receive(:create)
           end
         end
-      end.should_not raise_error
+        
+      end.should_not fail
     end
     
-    it "should pass if step is 'nontrivial failing'" do
+    it "should fail if step is 'nontrivial failing'" do
       lambda do
         StepSpecr.spec "Given nontrivial passing step" do
           step_group :spec
           before do
             class SpecificModel 
             end 
-            SpecificModel.should_receive(:never_called)
+            #SpecificModel.should_receive(:create)
           end
         end
       end.should raise_error
