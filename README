@@ -4,7 +4,7 @@ by Matthias Hennemeyer <mhennemeyer@gmail.com>
 
 == Introduction
 
-Stephelper is a Rails plugin intended to be used with Rspec User Stories.
+StepSpecr is a Rails plugin intended to be used with Rspec User Stories.
 It provides a 'testing' framework for speccing Given/When/Then steps within Rspec examples. This lets you implement GWT-steps the BDD way.
 
 
