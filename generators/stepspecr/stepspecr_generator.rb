@@ -10,9 +10,9 @@ class StepspecrGenerator < Rails::Generator::Base
   def manifest
     record do |m|
       m.directory 'spec/steps'
-      m.file      'helper.rb'                      'spec/steps/stepspecr_helper.rb'
-      m.file      'example_steps.rb'               'spec/steps/example_steps.rb'
-      m.file      'example_step_spec.rb'           'spec/steps/example_step_spec.rb'
+      m.file      'helper.rb',                      'spec/steps/stepspecr_helper.rb'
+      m.file      'example_steps.rb',               'spec/steps/example_steps.rb'
+      m.file      'example_step_spec.rb',           'spec/steps/example_step_spec.rb'
     
     end
   end
