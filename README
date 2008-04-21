@@ -16,7 +16,7 @@ In a plaintext story the following step is needed:
   Given 1 articles
 Instead of 'just implement' and 'running the story as a test': write a spec:
 
-in PROJECT_HOME/spec/steps/article_story_spec.rb
+in PROJECT_HOME/spec/steps/article_steps_spec.rb
 
   require File.expand_path(File.dirname(__FILE__) + "/stepspecr_helper.rb")
   
@@ -37,7 +37,9 @@ Running the example will perform the following actions:
   
 1. It will (try to) collect the steps supplied to step_group :articles 
 2. It will run the story
-3. It will FAIL ... 
+3. It will FAIL ...
+
+  $  script/spec --format specdoc spec/steps/article_steps_spec.rb
 
 Implement the step:
   
