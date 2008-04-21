@@ -105,6 +105,7 @@ describe StepSpecr do
     
     it "should parse 1 given argument" do
       StepSpecr.spec "Given one argument" do
+        before { $arg = nil }
         after do
           $arg.should == 'one'
         end
@@ -113,6 +114,7 @@ describe StepSpecr do
     
     it "should parse 2 given arguments" do
       StepSpecr.spec "Given one two arguments" do
+        before { $arg = nil }
         after do
           $arg.should == %w( one two )
         end

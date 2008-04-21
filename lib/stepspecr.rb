@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'spec'
 require 'spec/matchers'
 require 'spec/story'
