@@ -7,6 +7,7 @@ class StepSpecr
   
   @@after_expectation = lambda { true }
   @@before_expectation = lambda { true }
+  @@step_group_name = :spec
   
   class << self
     
