@@ -42,8 +42,10 @@ class StepSpecr
       world = Spec::Story::World.create
       step = stepgroup.find(type, stepname)
       raise Spec::Expectations::ExpectationNotMetError.new("Didn't find step: '#{stepname}'") if step == nil
+      
+      args = step.parse_args(stepname)
       before_expectation.perform world
-      step.perform world
+      step.perform world, *args
       after_expectation.perform world 
     end
     

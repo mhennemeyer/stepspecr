@@ -102,6 +102,22 @@ describe StepSpecr do
         end
       end.should raise_error
     end
+    
+    it "should parse 1 given argument" do
+      StepSpecr.spec "Given one argument" do
+        after do
+          $arg.should == 'one'
+        end
+      end
+    end
+    
+    it "should parse 2 given arguments" do
+      StepSpecr.spec "Given one two arguments" do
+        after do
+          $arg.should == %w( one two )
+        end
+      end
+    end
 
   end
 end

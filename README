@@ -23,9 +23,12 @@ in PROJECT_HOME/spec/steps/article_story_spec.rb
   describe "Given $count articles" do
     it "should create 5 articles for count=5" do
       StepSpecr.spec "Given 5 articles" do
-        steps_for :articles
+        step_group :articles
+        before do
+          Article.destroy_all
+        end
         after do 
-          Article.count.should >= 5
+          Article.count.should == 5
         end
       end
     end
@@ -34,13 +37,8 @@ in PROJECT_HOME/spec/steps/article_story_spec.rb
 Running the example will perform the following actions:
   
 1. It will (try to) collect the steps supplied to steps_for :articles 
-2. Build a story:
-     ...
-     Given 5 articles
-     Then after_step
-3. Create the 'Then after_step' with 'Article.count.should >= 5'
-4. It will run the story
-5. It will FAIL ... 
+2. It will run the story
+3. It will FAIL ... 
 
 Implement the step:
   
@@ -53,7 +51,7 @@ in PROJECT_HOME/stories/steps/article_steps.rb
   end
   
 
-Run the example again and it should PASS.
+Run the example again and it should PASS (Assuming you have a Article model).
 
 === A more complex example
 
@@ -67,8 +65,8 @@ This will be more than one example: (Just showing the description - BDD doesn't 
 
    describe "Given $count $models" do
      before(:all) do 
-       StepSpecr.setup do
-         steps_for :resources
+       StepSpecr.configure do
+         step_group :resources
        end
      end
      
@@ -94,8 +92,12 @@ This will be more than one example: (Just showing the description - BDD doesn't 
      
      it "should create 17 lists for count=17, models=lists" do
        StepSpecr.spec "Given 17 lists" do
-          after { List.count.should >= 17 }
-        end
+         before do
+           class List
+           end
+           List.should_receive(:create).exactly(17).times
+         end
+       end
      end
    end
    
