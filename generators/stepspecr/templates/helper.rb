@@ -2,7 +2,7 @@ step_dir = "stories/steps"
 
 dir = File.dirname(__FILE__)
 
-require File.expand_path("#{dir}/../../spec/spec_helper.rb"
+require dir + "/../../spec/spec_helper.rb"
 
 require 'spec'
 require 'spec/mocks'
