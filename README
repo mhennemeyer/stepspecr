@@ -13,7 +13,7 @@ It provides a 'testing' framework for speccing Given/When/Then steps within Rspe
 === A rather trivial one
 
 In a plaintext story the following step is needed:  
-  Given 5 articles
+  Given 1 articles
 Instead of 'just implement' and 'running the story as a test': write a spec:
 
 in PROJECT_HOME/spec/steps/article_story_spec.rb
@@ -21,14 +21,13 @@ in PROJECT_HOME/spec/steps/article_story_spec.rb
   require File.expand_path(File.dirname(__FILE__) + "/stepspecr_helper.rb")
   
   describe "Given $count articles" do
-    it "should create 5 articles for count=5" do
-      StepSpecr.spec "Given 5 articles" do
+    it "should create 1 articles for count=1" do
+      StepSpecr.spec "Given 1 articles" do
         step_group :articles
         before do
-          Article.destroy_all
-        end
-        after do 
-          Article.count.should == 5
+          class Article
+          end
+          Article.should_receive(:create)
         end
       end
     end
@@ -36,7 +35,7 @@ in PROJECT_HOME/spec/steps/article_story_spec.rb
     
 Running the example will perform the following actions:
   
-1. It will (try to) collect the steps supplied to steps_for :articles 
+1. It will (try to) collect the steps supplied to step_group :articles 
 2. It will run the story
 3. It will FAIL ... 
 
