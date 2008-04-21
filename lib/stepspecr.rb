@@ -40,9 +40,7 @@ class StepSpecr
     end
     
     def after_expectation #:nodoc:
-      Spec::Story::Step.new("after") do
-        @@after_expectation.call
-      end
+      Spec::Story::Step.new("after",&@@after_expectation)
     end
     
     # :call-seq:
@@ -54,9 +52,7 @@ class StepSpecr
     end
     
     def before_expectation #:nodoc:
-      Spec::Story::Step.new("before") do
-        @@before_expectation.call
-      end
+      Spec::Story::Step.new("before",&@@before_expectation)
     end
     
     #:call-seq:
@@ -89,6 +85,13 @@ class StepSpecr
       raise Spec::Expectations::ExpectationNotMetError.new("Didn't find step: '#{stepname}'") if step == nil
       
       args = step.parse_args(stepname)
+      
+      # world.instance_eval do
+      #   before_expectation.perform self
+      #   step.perform self, *args
+      #   after_expectation.perform self
+      # end
+      
       before_expectation.perform world
       step.perform world, *args
       after_expectation.perform world 

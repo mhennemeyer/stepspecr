@@ -19,5 +19,11 @@ steps_for :spec do
   Given "$one $two arguments" do |arg1, arg2|
     $arg = [arg1, arg2]
   end
+  
+  Given "a step that sets @number to 2" do
+    @number = 2
+  end
+
+
 
 end

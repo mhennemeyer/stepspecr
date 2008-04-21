@@ -122,4 +122,17 @@ describe StepSpecr do
     end
 
   end
+  
+  describe "before - step - after" do
+    it "should not forget values of instance variables" do
+      StepSpecr.configure do 
+        before do
+          @number = 1
+        end
+      end
+      StepSpecr.spec "Given a step that sets @number to 2" do
+        after { @number.should == 2 }
+      end
+    end
+  end
 end
