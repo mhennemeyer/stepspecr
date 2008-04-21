@@ -1,7 +1,7 @@
 require 'rbconfig'
 
 # This generator bootstraps a Rails project for use with StepSpecr
-class StepSpecrGenerator < Rails::Generator::Base
+class StepspecrGenerator < Rails::Generator::Base
 
   def initialize(runtime_args, runtime_options = {})
     super

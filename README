@@ -119,6 +119,7 @@ The implementation could look like this:
 == INSTALL:
 
   $ ruby script/plugin install git://github.com/mhennemeyer/stepspecr.git
+  $ script/generate stepspecr
   
 
 Copyright (c) 2008 Matthias Hennemeyer, released under the MIT license
