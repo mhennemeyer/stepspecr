@@ -52,7 +52,7 @@ in PROJECT_HOME/stories/steps/article_steps.rb
   end
   
 
-Run the example again and it should PASS (Assuming you have a Article model).
+Run the example again and it should PASS.
 
 === A more complex example
 
