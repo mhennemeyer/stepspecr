@@ -86,15 +86,9 @@ class StepSpecr
       
       args = step.parse_args(stepname)
       
-      # world.instance_eval do
-      #   before_expectation.perform self
-      #   step.perform self, *args
-      #   after_expectation.perform self
-      # end
-      
       before_expectation.perform world
       step.perform world, *args
-      after_expectation.perform world 
+      after_expectation.perform world
     end
     
     def step_group_name #:nodoc:

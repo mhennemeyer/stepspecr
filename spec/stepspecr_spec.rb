@@ -90,7 +90,7 @@ describe StepSpecr do
       end.should_not fail
     end
     
-    it "should fail if step is 'nontrivial failing'" do
+    it "should fail if step is 'nontrivial passing' but the mock is not setup" do
       lambda do
         StepSpecr.spec "Given nontrivial passing step" do
           step_group :spec
@@ -101,6 +101,19 @@ describe StepSpecr do
           end
         end
       end.should raise_error
+    end
+    
+    it "should fail if mock expectation is not met" do
+      
+        StepSpecr.spec "Given trivial passing step" do
+          step_group :spec
+          before do
+            class SpecificModel 
+            end 
+            #SpecificModel.should_receive(:create)
+          end
+        end
+        
     end
     
     it "should parse 1 given argument" do
