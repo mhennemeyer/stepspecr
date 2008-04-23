@@ -3,6 +3,36 @@ require 'spec/matchers'
 require 'spec/story'
 require 'spec/story/step'
 
+module StepEval
+  
+  
+  # :call-seq:
+  # step_eval "Given a model", :stepgroup
+  #
+  # step_eval simplifies the stepspeccing by directly running the 
+  # step (given as the first arg) in the actual context of the example.
+  #   describe "Given $count articles" do
+  #       it "should create 5 articles for count=5" do
+  #         Article.destroy_all
+  #         step_eval "Given 5 articles", :articles
+  #         Article.count.should == 5 
+  #       end
+  #   end
+  # 
+  # You have to include the StepEval module in order to use this:
+  # In description: include StepEval
+  def step_eval(stepname, stepgroupname)
+    type = stepname.split(/\s+/).first.to_s.downcase.to_sym
+    stepname = stepname.split(/\s+/)[1,100].join(" ")
+    stepgroup = steps_for stepgroupname
+    step = stepgroup.find(type, stepname)
+    raise Spec::Expectations::ExpectationNotMetError.new("Didn't find step: '#{stepname}'") if step == nil
+    args = step.parse_args(stepname)
+    step.perform self, *args
+  end
+  
+end
+
 # StepSpecr provides a 'testing' framework for speccing Given/When/Then steps 
 # within Rspec examples. This lets you implement GWT-steps the BDD way.
 #
@@ -30,6 +60,8 @@ class StepSpecr
   @@step_group_name = :spec
   
   class << self
+    
+    include ::StepEval
     
     # :call-seq:
     # after { Article.count.should == 10 }
@@ -78,16 +110,12 @@ class StepSpecr
     # and/or by options set in the block that is associated
     def spec(stepname,&block)
       configure(&block)
-      type = stepname.split(/\s+/).first.to_s.downcase.to_sym
-      stepname = stepname.split(/\s+/)[1,100].join(" ")
-      world = Spec::Story::World.create
-      step = stepgroup.find(type, stepname)
-      raise Spec::Expectations::ExpectationNotMetError.new("Didn't find step: '#{stepname}'") if step == nil
-      
-      args = step.parse_args(stepname)
-      
+      world = Spec::Story::World.create 
       before_expectation.perform world
-      step.perform world, *args
+      world.instance_eval do 
+        extend ::StepEval
+        step_eval stepname, @@step_group_name
+      end
       after_expectation.perform world
     end
     
@@ -109,3 +137,4 @@ class StepSpecr
     
   end
 end
+
