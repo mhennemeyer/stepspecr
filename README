@@ -22,21 +22,17 @@ in PROJECT_HOME/spec/steps/article_steps_spec.rb
   
   describe "Given $count articles" do
     it "should create 1 articles for count=1" do
-      StepSpecr.spec "Given 1 articles" do
-        step_group :articles
-        before do
-          class Article
-          end
-          Article.should_receive(:create)
-        end
+      class Article
       end
+      Article.should_receive :create
+      step_eval "Given 1 article", :articles
     end
   end
     
 Running the example will perform the following actions:
   
 1. It will (try to) collect the steps supplied to step_group :articles 
-2. It will run the story
+2. It will run the step
 3. It will FAIL ...
 
   $  script/spec --format specdoc spec/steps/article_steps_spec.rb
@@ -62,6 +58,8 @@ You want a step that creates modelobjects that are specified in the story:
   Given 17 lists
   ...
 
+Using StepSpecr.step is a little bit more involved than plain step_eval but gives you 
+a facility to configure the thing so that you can DRY it up.
 This will be more than one example: (Just showing the description - BDD doesn't mean to write more than one example at a time)
 
    describe "Given $count $models" do
